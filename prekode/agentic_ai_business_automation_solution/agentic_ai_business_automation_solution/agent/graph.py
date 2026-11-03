@@ -6,6 +6,7 @@ from tools.business_tools import (
     get_customer, get_orders, get_order, check_inventory,
     create_ticket, create_replacement, log_audit
 )
+from agent.verification import verify_decision, route_after_verify, verify_response
 
 def identify_customer(state:AgentState):
     # Teaching shortcut: customer ID may be supplied as C001 etc.
@@ -107,7 +108,8 @@ def execute(state):
     log_audit(
         state.get("customer_id") or "UNKNOWN",
         d["action"], d["reason"],
-        {"order":order,"replacement":state.get("replacement"),"ticket":state.get("ticket")}
+        {"order":order,"replacement":state.get("replacement"),"ticket":state.get("ticket"),
+         "verification":state.get("verification")}
     )
     return state
 
@@ -134,9 +136,11 @@ def build_graph():
     g.add_node("retrieve_policy",retrieve_policy)
     g.add_node("check_stock",check_stock)
     g.add_node("decide",decide)
+    g.add_node("verify_decision",verify_decision)
     g.add_node("human_gate",human_gate)
     g.add_node("execute",execute)
     g.add_node("respond",respond)
+    g.add_node("verify_response",verify_response)
 
     g.set_entry_point("identify_customer")
     g.add_edge("identify_customer","classify")
@@ -145,8 +149,13 @@ def build_graph():
     g.add_edge("select_order","retrieve_policy")
     g.add_edge("retrieve_policy","check_stock")
     g.add_edge("check_stock","decide")
-    g.add_edge("decide","human_gate")
+    g.add_edge("decide","verify_decision")
+    g.add_conditional_edges("verify_decision",
+                            route_after_verify,
+                            {"ok": "human_gate","fail":"execute"},
+                            )
     g.add_edge("human_gate","execute")
     g.add_edge("execute","respond")
-    g.add_edge("respond",END)
+    g.add_edge("respond","verify_response")
+    g.add_edge("verify_response",END)
     return g.compile()

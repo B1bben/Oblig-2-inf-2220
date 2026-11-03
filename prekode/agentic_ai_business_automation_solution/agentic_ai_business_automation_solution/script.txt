@@ -1,0 +1,22 @@
+Example customer identity must be explicit for this teaching demo.
+Try: My customer ID is C001. Order O1001 arrived damaged and I want a replacement.
+
+Request: Approve sensitive action if requested? [y/N]: here
+{
+  "user_text": "test",
+  "customer_id": null,
+  "customer": null,
+  "intent": "general",
+  "confidence": 0.6,
+  "orders": [],
+  "selected_order": null,
+  "inventory": null,
+  "decision": {
+    "allowed": false,
+    "reason": "Customer identity could not be verified.",
+    "action": "TICKET"
+  },
+  "approval_required": false,
+  "approved": false,
+  "error": "No verified customer identity was supplied."
+}

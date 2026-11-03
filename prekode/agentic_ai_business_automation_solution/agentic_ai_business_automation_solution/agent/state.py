@@ -13,6 +13,9 @@ class AgentState(TypedDict, total=False):
     decision: Any
     approval_required: bool
     approved: bool
+    verification: Any
+    response_verified: bool
+    response_issues: Any
     escalated: bool
     ticket: Any
     replacement: Any

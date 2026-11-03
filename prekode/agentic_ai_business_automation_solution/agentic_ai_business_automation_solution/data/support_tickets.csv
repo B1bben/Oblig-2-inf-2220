@@ -1,0 +1,2 @@
+ticket_id,customer_id,order_id,category,status,description
+T001,C002,O1002,general,open,Customer asked about delivery documentation.

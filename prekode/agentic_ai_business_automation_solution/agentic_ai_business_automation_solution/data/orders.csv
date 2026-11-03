@@ -1,0 +1,6 @@
+order_id,customer_id,product_id,order_date,status,delivered_date,quantity
+O1001,C001,P100,2026-09-01,delivered,2026-09-05,1
+O1002,C002,P101,2026-08-20,delivered,2026-08-24,1
+O1003,C003,P200,2026-09-07,delivered,2026-09-10,1
+O1004,C004,P300,2026-09-10,shipped,,1
+O1005,C005,P400,2026-09-01,delivered,2026-09-04,2

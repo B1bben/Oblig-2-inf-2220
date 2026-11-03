@@ -1,0 +1,9 @@
+langgraph>=0.2
+langchain-core>=0.3
+chromadb>=0.5
+sentence-transformers>=3.0
+requests>=2.32
+streamlit>=1.38
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5

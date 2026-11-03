@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.streamlit/
+data/nordictech.db
+data/chroma/
+.env

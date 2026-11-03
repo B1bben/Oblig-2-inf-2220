@@ -1,0 +1,5 @@
+NordicTech Shipping Policy
+
+Orders with status shipped have not yet been delivered.
+A replacement should not be created for an order that is still in transit unless a manager approves an exception.
+For a delivered order, support can investigate damage or missing-item claims.

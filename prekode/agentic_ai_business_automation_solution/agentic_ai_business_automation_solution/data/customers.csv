@@ -1,0 +1,6 @@
+customer_id,name,email,country,vip
+C001,Anna Hansen,anna.hansen@example.com,Norway,0
+C002,Lars Berg,lars.berg@example.com,Norway,0
+C003,Sofia Lind,sofia.lind@example.com,Sweden,1
+C004,Erik Nilsen,erik.nilsen@example.com,Norway,0
+C005,Maja Olsen,maja.olsen@example.com,Denmark,0

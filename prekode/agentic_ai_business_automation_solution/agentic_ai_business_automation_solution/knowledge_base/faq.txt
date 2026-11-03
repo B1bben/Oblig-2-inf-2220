@@ -1,0 +1,6 @@
+NordicTech FAQ
+
+Replacement requests should contain an order reference when possible.
+If the customer cannot provide an order reference, support should use verified customer identity and recent orders.
+If there is no matching order, create a support ticket instead of inventing an order.
+Never disclose another customer's order, address, payment information, or personal data.

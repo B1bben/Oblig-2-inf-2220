@@ -1,0 +1,6 @@
+product_id,name,category,price_eur,stock
+P100,NordicBook Pro 14,Laptop,1299,7
+P101,NordicBook Air 13,Laptop,999,4
+P200,NordicPhone X,Phone,899,12
+P300,NordicMonitor 27,Monitor,399,5
+P400,NordicDock USB-C,Accessory,149,20

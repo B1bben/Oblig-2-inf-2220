@@ -1,0 +1,4 @@
+invoice_id,customer_id,order_id,amount_eur,status
+I001,C001,O1001,1299,paid
+I002,C002,O1002,999,paid
+I003,C003,O1003,899,paid

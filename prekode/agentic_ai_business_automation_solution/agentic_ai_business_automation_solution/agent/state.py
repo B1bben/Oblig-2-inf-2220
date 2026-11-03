@@ -21,4 +21,5 @@ class AgentState(TypedDict, total=False):
     replacement: Any
     response: str
     audit: Any
+    injection_flags: Any
     error: Optional[str]

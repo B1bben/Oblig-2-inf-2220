@@ -1,6 +1,6 @@
 import re
 import json
-
+from agent.prompt_injection_defense import scan
 VALID_INTENTS = {"replacement","refund","status","general","unsafe"}
 APPROVAL_CLAIMS = ["Has been approved","Replacement has been created","Replacement is on its way","We have refunded"]
 
@@ -13,6 +13,10 @@ def verify_decision(state):
     inv = state.get("inventory")
 
     add("intent_valid", state.get("intent") in VALID_INTENTS, f"intent={state.get('intent')}")
+
+    inj = scan(state.get("user_text", ""))
+    state["injection_flags"] = inj
+    add("no_prompt_injection", not inj, ",".join(inj))
 
     if order and state.get("customer_id"):
         add("order_owned_by_customer",
@@ -31,6 +35,8 @@ def verify_decision(state):
         "failed": [c["name"] for c in failed],
     }
     if failed:
+        if inj: 
+            state["intent"] = "unsafe"
         state["decision"] = {
             "allowed": False,
             "action": "ESCALATE",

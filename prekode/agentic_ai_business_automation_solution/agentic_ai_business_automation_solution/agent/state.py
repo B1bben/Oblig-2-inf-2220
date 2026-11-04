@@ -1,5 +1,6 @@
 from typing import TypedDict, Any, Optional
 
+
 class AgentState(TypedDict, total=False):
     user_text: str
     customer_id: Optional[str]
@@ -24,3 +25,7 @@ class AgentState(TypedDict, total=False):
     audit: Any
     injection_flags: Any
     error: Optional[str]
+    decision_attempts: int
+    response_attempts: int
+    reflection_log: Any
+    retrieval_query: Optional[str]

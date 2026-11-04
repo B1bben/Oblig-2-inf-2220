@@ -109,7 +109,8 @@ def execute(state):
         state.get("customer_id") or "UNKNOWN",
         d["action"], d["reason"],
         {"order":order,"replacement":state.get("replacement"),"ticket":state.get("ticket"),
-         "verification":state.get("verification")}
+         "verification":state.get("verification"),
+         "blocked_order_id":state.get("blocked_order_id")}
     )
     return state
 

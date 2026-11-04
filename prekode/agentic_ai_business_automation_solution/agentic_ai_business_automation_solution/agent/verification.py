@@ -1,8 +1,12 @@
 import re
 import json
 from agent.prompt_injection_defense import scan
+from tools.business_tools import log_audit
 VALID_INTENTS = {"replacement","refund","status","general","unsafe"}
-APPROVAL_CLAIMS = ["Has been approved","Replacement has been created","Replacement is on its way","We have refunded"]
+ID_RE = re.compile(r"\b[ORTC]\d{3,8}\b")
+EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
+REQUIRED_POLICY = {"REPLACEMENT": {"return_policy", "warranty_policy", "shipping_policy"},}
+APPROVAL_CLAIMS = ["has been approved","replacement has been created","replacement is on its way","we have refunded"]
 
 def verify_decision(state):
     checks = []
@@ -17,17 +21,30 @@ def verify_decision(state):
     inj = scan(state.get("user_text", ""))
     state["injection_flags"] = inj
     add("no_prompt_injection", not inj, ",".join(inj))
-
-    if order and state.get("customer_id"):
-        add("order_owned_by_customer",
-            order["customer_id"] == state["customer_id"],
+    owner_ok = True
+    if order:
+        requester = state.get("customer_id")
+        owner_ok = requester is not None and order["customer_id"] == requester
+        add("order_owned_by_customer", owner_ok,
             f"order owner{order['customer_id']}, requester={state['customer_id']}")
-    if d["action"] == "REPLACEMENT":
+        if not owner_ok:
+            state["blocked_order_id"] = order["order_id"]
+            state["selected_order"] = None
+            state["inventory"] = None
+    if d["action"] == "REPLACEMENT" and owner_ok:
         add("order_delivered", order and order["status"] == "delivered")
         add("in_stock", inv and inv["stock"]> 0)
         needs_approval = float(order["price_eur"]) > 1000
         add("approval_flag_consistent",needs_approval == state.get("approval_required", False),f"price={order['price_eur']}, approval_required={state.get('approval_required')}")
     add("policy_evidence", bool(state.get("policy_hits")))
+    hits = state.get("policy_hits") or []
+    sources = {h["source"] for h in hits}
+    required = REQUIRED_POLICY.get(d["action"])
+    if required:
+        add("policy_evidence", bool(sources & required),
+            f"retrieved={sorted(sources)}, required_any_of={sorted(required)}")
+    else:
+        add("policy_evidence", bool(hits), f"retrieved={sorted(sources)}")
     failed = [c for c in checks if not c["passed"]]
     state["verification"]= {
         "passed": not failed,
@@ -64,18 +81,22 @@ def verify_response(state):
         known.add(state["selected_order"]["order_id"])
     if state.get("customer_id"):
         known.add(state["customer_id"])
-    for found in re.findall(r"\b[ORTC]\d{3,8}\b", resp):
-        if found.upper() not in {k.upper() for k in known}:
+    known_upper = {k.upper() for k in known}
+    for found in ID_RE.findall(resp):
+        if found.upper() not in known_upper:
             issues.append(f"unknown ID in response: {found}")
-    own_email = (state.get("customer") or {}).get("email")
-    for em in re.findall(r"[\w.]+@[\w.]+", resp):
-        if em != own_email:
+    own_email = ((state.get("customer") or {}).get("email") or "").lower()
+    for em in EMAIL_RE.findall(resp):
+        if em.lower() != own_email:
             issues.append("foreign email in response")
     state["response_issues"] = issues
     state["response_verified"] = not issues
     if issues:
+        log_audit(state.get("customer_id") or "UNKNOWN", "RESPONSE_REJECTED",
+                  "Generated response failed verification", {"issues": issues})
         if state.get("escalated") or (state.get("decision") or {}).get("action") in ("ESCALATE", "TICKET"):
             state["response"] = ("Your request needs a support manager's review " "before we can complete the requested action.")
         else:
             state["response"] = ("We have recorded your request and will review it " "using the order and policy information available.")
+
     return state

@@ -18,8 +18,17 @@ def _load():
 def retrieve(query, k=2):
     _load()
     emb=_model.encode([query], normalize_embeddings=True).tolist()
-    result=_col.query(query_embeddings=emb,n_results=k)
-    out=[]
-    for i,doc in enumerate(result["documents"][0]):
-        out.append({"source":result["ids"][0][i],"text":doc})
+    #result=_col.query(query_embeddings=emb,n_results=k)
+    #out=[]
+    #for i,doc in enumerate(result["documents"][0]):
+    #    out.append({"source":result["ids"][0][i],"text":doc})
+    result = _col.query(query_embeddings=emb, n_results=k,
+                        include=["documents", "distances"])
+    out = []
+    for i, doc in enumerate(results["documents"][0]):
+        out.append({
+            "source": result["ids"][0][i],
+            "text": doc,
+            "distance": result["distances"][0][i],
+        })
     return out

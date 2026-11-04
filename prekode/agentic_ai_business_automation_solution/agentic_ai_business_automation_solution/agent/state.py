@@ -16,6 +16,7 @@ class AgentState(TypedDict, total=False):
     verification: Any
     response_verified: bool
     response_issues: Any
+    blocked_order_id: Optional[str]
     escalated: bool
     ticket: Any
     replacement: Any

@@ -8,7 +8,7 @@ PATTERNS = {
 
     "data_exfiltration": r"\b(reveal|dump|export|leak)\b.{0,40}\b(records?|data|database|passwords?)\b",
 
-    "role_hijack": r"\b(you are now|act as| pretend to be| developer mode|jailbreak|system prompt)\b",
+    "role_hijack": r"\b(you are now|act as|pretend to be|developer mode|jailbreak|system prompt)\b",
 
     "fake_authorization": r"\b(manager|admin|supervisor)\b.{0,30}\b(approved|authori[sz]ed)\b|\bi am (an? )?(admin|manager|employee)\b",
 

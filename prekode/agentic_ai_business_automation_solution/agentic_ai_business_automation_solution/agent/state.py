@@ -29,3 +29,5 @@ class AgentState(TypedDict, total=False):
     response_attempts: int
     reflection_log: Any
     retrieval_query: Optional[str]
+    invoice: Any
+    refund: Any

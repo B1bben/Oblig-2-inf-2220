@@ -1,3 +1,4 @@
+import sqlite3
 from langgraph.graph import StateGraph, END
 from agent.state import AgentState
 from agent.llm import classify_request, generate_response
@@ -10,6 +11,10 @@ from tools.business_tools import (
     create_ticket,
     create_replacement,
     log_audit,
+    get_invoice,
+    check_refund_eligibility,
+    issue_refund,
+    REFUND_AUTO_LIMIT_EUR,
 )
 from agent.reflection import reflect_on_decision
 from agent.verification import (
@@ -64,6 +69,12 @@ def select_order(state):
     state["selected_order"] = (
         delivered[0] if delivered else (orders[0] if orders else None)
     )
+    return state
+
+
+def load_invoice(state):
+    order = state.get("selected_order")
+    state["invoice"] = get_invoice(order["order_id"]) if order else None
     return state
 
 
@@ -130,6 +141,27 @@ def decide(state):
                 "action": "REPLACEMENT",
                 "approval_required": False,
             }
+    elif intent == "refund":
+        check = check_refund_eligibility(state.get("invoice"), order)
+        if not check["eligible"]:
+            decision = {
+                "allowed": False,
+                "reason": check["reason"],
+                "action": check["route"],
+            }
+        else:
+            needs = check["amount_eur"] > REFUND_AUTO_LIMIT_EUR
+            decision = {
+                "allowed": True,
+                "reason": check["reason"]
+                + (
+                    f" Amount exceeds EUR {REFUND_AUTO_LIMIT_EUR} auto-approval limit."
+                    if needs
+                    else ""
+                ),
+                "action": "REFUND",
+                "approval_required": needs,
+            }
     elif intent == "status":
         decision = {
             "allowed": True,
@@ -161,6 +193,28 @@ def human_gate(state):
 def execute(state):
     d = state["decision"]
     order = state.get("selected_order")
+    if d["action"] == "REFUND" and not state.get("escalated"):
+        inv = state["invoice"]
+        for _ in range(2):  # retry once
+            try:
+                state["refund"] = issue_refund(
+                    inv["invoice_id"],
+                    inv["amount_eur"],
+                    "HUMAN_APPROVED" if state.get("approval_required") else "SYSTEM",
+                )
+                break
+            except sqlite3.OperationalError as e:  # transient: retry
+                state["error"] = str(e)
+            except Exception as e:  # deterministic: do not retry
+                state["error"] = str(e)
+                break
+        if not state.get("refund"):  # fallback: escalate to a ticket
+            state["escalated"] = True
+            d = state["decision"] = {
+                "allowed": False,
+                "action": "ESCALATE",
+                "reason": f"Refund could not be processed: {state['error']}",
+            }
     if d["action"] == "REPLACEMENT" and not state.get("escalated"):
         state["replacement"] = create_replacement(
             order["order_id"],
@@ -186,6 +240,8 @@ def execute(state):
             "verification": state.get("verification"),
             "blocked_order_id": state.get("blocked_order_id"),
             "reflection_log": state.get("reflection_log"),
+            "invoice": state.get("invoice"),
+            "refund": state.get("refund"),
         },
     )
     return state
@@ -226,6 +282,7 @@ def build_graph():
     g.add_node("human_gate", human_gate)
     g.add_node("execute", execute)
     g.add_node("respond", respond)
+    g.add_node("load_invoice", load_invoice)
     g.add_node("verify_response", verify_response)
     g.add_node("reflect", reflect_on_decision)
     g.add_node("escalate_after_verify", escalate_after_verify)
@@ -235,7 +292,8 @@ def build_graph():
     g.add_edge("identify_customer", "classify")
     g.add_edge("classify", "load_customer_orders")
     g.add_edge("load_customer_orders", "select_order")
-    g.add_edge("select_order", "retrieve_policy")
+    g.add_edge("select_order", "load_invoice")
+    g.add_edge("load_invoice", "retrieve_policy")
     g.add_edge("retrieve_policy", "check_stock")
     g.add_edge("check_stock", "decide")
     g.add_edge("decide", "verify_decision")

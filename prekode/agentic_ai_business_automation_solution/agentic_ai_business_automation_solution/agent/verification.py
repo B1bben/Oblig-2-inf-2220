@@ -1,13 +1,13 @@
 import re
-import json
 from agent.prompt_injection_defense import scan
-from tools.business_tools import log_audit
+from tools.business_tools import log_audit, REFUND_AUTO_LIMIT_EUR
 
 VALID_INTENTS = {"replacement", "refund", "status", "general", "unsafe"}
 ID_RE = re.compile(r"\b[ORTC]\d{3,8}\b")
 EMAIL_RE = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 REQUIRED_POLICY = {
     "REPLACEMENT": {"return_policy", "warranty_policy", "shipping_policy"},
+    "REFUND": {"return_policy"},
 }
 APPROVAL_CLAIMS = [
     "has been approved",
@@ -52,6 +52,32 @@ def verify_decision(state):
             state["blocked_order_id"] = order["order_id"]
             state["selected_order"] = None
             state["inventory"] = None
+    invoice = state.get("invoice")
+    if (
+        invoice
+        and state.get("customer_id")
+        and invoice["customer_id"] != state["customer_id"]
+    ):
+        add(
+            "invoice_owned_by_customer",
+            False,
+            f"invoice owner={invoice['customer_id']}",
+        )
+        state["invoice"] = None
+        invoice = None
+    if d["action"] == "REFUND" and owner_ok and invoice:
+        add("refund_invoice_paid", invoice["status"] == "paid")
+        add(
+            "refund_amount_valid",
+            0
+            < float(invoice["amount_eur"])
+            <= float(order["price_eur"]) * order.get("quantity", 1),
+        )
+        add(
+            "refund_approval_consistent",
+            (float(invoice["amount_eur"]) > REFUND_AUTO_LIMIT_EUR)
+            == state.get("approval_required", False),
+        )
     if d["action"] == "REPLACEMENT" and owner_ok:
         add("order_delivered", order and order["status"] == "delivered")
         add("in_stock", inv and inv["stock"] > 0)
@@ -111,11 +137,15 @@ def verify_response(state):
     low = resp.lower()
     issues = []
 
-    if not state.get("replacement") and any(p in low for p in APPROVAL_CLAIMS):
+    if (
+        not state.get("replacement")
+        and not state.get("refund")
+        and any(p in low for p in APPROVAL_CLAIMS)
+    ):
         issues.append("claims replacement/approval that did not occur")
 
     known = set()
-    for obj in (state.get("replacement"), state.get("ticket")):
+    for obj in (state.get("replacement"), state.get("ticket"), state.get("refund")):
         if obj:
             known.update(str(v) for v in obj.values())
     if state.get("selected_order"):

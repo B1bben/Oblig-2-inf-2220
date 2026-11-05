@@ -1,0 +1,204 @@
+Students need to implement advanced agentic AI for business automation.
+The baseline code is attached in the files->Assignment2 folder.
+The instructions for the assignment are provided in README.md.
+
+
+
+Assignment 2
+--------------------------------------------------------------------------------------------
+
+NordicTech is a fictional technology retailer. The company wants to use an Agentic AI system for customer-support and business-process automation.
+
+Customers can submit requests such as:
+
+“My laptop arrived damaged. I want a replacement.”
+
+As an example.
+
+The agent should be able to identify the customer, retrieve the relevant order and product information, search company policies, check inventory, make a decision about replacement eligibility, and perform appropriate business actions. Sensitive actions should be sent for human approval.
+
+The baseline system has already been developed (attached in the file section->Assignment 2 folder). Students are not required to build the complete system from scratch. Instead, they must extend the existing NordicTech system with new agentic capabilities and demonstrate experimentally how their extensions affect the system's functionality, reliability, safety, or business value.
+
+Functional requirements
+The system should provide a user interface for customer-support requests.
+The agent should identify customers.
+The agent should retrieve customer orders and product information.
+The agent should search company policies using RAG.
+The agent should check product inventory.
+The agent should determine whether a requested action is allowed.
+Sensitive actions should require human approval.
+The system should be able to create support tickets.
+The system should be able to create replacement orders in a sandbox database.
+The system should generate a response to the customer.
+Important decisions and actions should be recorded in an audit log.
+Non-functional requirements / assumptions
+The provided case study does not specify numerical requirements such as concurrent users, requests per day, average request size, or a target SLA. These should therefore be defined by students if required for their particular extension.
+
+The baseline does specify the following technical and operational assumptions:
+
+Execution environment: Local environment.
+LLM: Local Ollama model such as Qwen3.
+API cost: No paid/public API is allowed.
+Data: Synthetic business data.
+Agent framework: LangGraph.
+Database: SQLite sandbox database.
+Knowledge retrieval: Chroma with Sentence Transformers.
+User interface: Streamlit.
+Safety: Sensitive actions require human approval.
+Security: The LLM must not directly execute arbitrary Python or SQL.
+Auditability: Important decisions and actions must be logged.
+Evaluation: The system should be evaluated using predefined test cases.
+Detail task description
+To extend the NordicTech Agentic AI system using generative AI tools and development frameworks, students should complete the following tasks:
+
+1. Understand the Existing System
+Study the existing LangGraph workflow.
+Understand the available business tools.
+Understand the SQLite business database.
+Examine the existing RAG implementation.
+Understand the human-approval mechanism.
+Run the baseline evaluation before making changes.
+2. Design the Enhanced Agent
+Students must add at least three substantial new capabilities.
+
+The extensions should include:
+
+At least one feature that improves reasoning or agent orchestration.
+At least one feature that improves reliability, safety, or security.
+At least one feature that provides additional business functionality.
+Possible optional extensions include:
+
+Multi-agent customer operations
+Long-term customer memory
+Advanced/hybrid RAG
+Email automation
+Invoice processing
+Sales-lead qualification
+Dynamic task planning
+Advanced human-in-the-loop authorization
+Prompt-injection defense
+Agent verification/reflection
+Agent observability
+Advanced evaluation
+Failure recovery
+Multilingual support
+Privacy/GDPR-aware processing
+Business KPI analysis
+Agent simulation
+A completely new business process.
+You may implement different functions.
+
+3. Add New Business Tools
+Students must implement at least two new tools that can be used by the agent.
+
+Examples include:
+
+read_email()
+search_customer()
+create_draft()
+send_email()
+Invoice-related tools
+CRM tools
+Business analytics tools
+The tools should be explicitly exposed to the agent rather than allowing the LLM to execute arbitrary Python or SQL.
+
+4. Extend the Agent Workflow
+Modify the existing LangGraph workflow.
+Add new states or nodes where necessary.
+Implement appropriate tool selection and routing.
+Handle dependencies between tasks.
+Add retry and failure-recovery mechanisms where appropriate.
+Maintain shared state between agent steps.
+For example, a complex customer request may need to be decomposed into customer lookup, order lookup, policy verification, inventory checking, and replacement preparation.
+
+5. Implement Safety and Human Oversight
+Students must maintain human oversight for sensitive operations.
+
+Depending on the chosen extension, this may include:
+
+Refund approval
+Replacement approval
+Sending external emails
+Access to personal information
+Deletion of customer data
+High-value business transactions
+Students may implement risk-based authorization where low-risk actions can proceed automatically while higher-risk actions require employee or manager approval.
+
+6. Error Handling and Failure Recovery
+Students should deliberately test system failures and implement appropriate:
+
+Retry → Fallback → Human Escalation → Audit
+
+Possible failure scenarios include:
+
+Ollama unavailable
+Chroma unavailable
+Database unavailable
+Invalid LLM response
+Malformed tool output
+Missing customer
+Missing order
+Database timeout
+Missing policy document.
+7. Evaluation and Testing
+Students must add at least 20 new evaluation cases and compare the enhanced system with the original baseline.
+
+The evaluation should consider metrics such as:
+
+Task success rate
+Decision accuracy
+Tool-selection accuracy
+RAG accuracy
+Hallucination rate
+Safety success rate
+Escalation rate
+Average latency
+Failure-recovery rate.
+Students must also analyse at least five failure cases, explaining:
+
+What the agent did.
+What should have happened.
+Why the failure occurred.
+How the system was improved.
+Whether the fix worked.
+8. Demonstration by Screen Recording
+Students should prepare a 5–7 minute demonstration showing:
+
+A normal request.
+The new feature.
+A complex request.
+A failure or edge case.
+Human approval.
+Evaluation results.
+9. Non-Functional Requirements Implementation
+If students introduce additional requirements such as scalability, reliability, security, latency, or privacy, they should implement and evaluate them experimentally.
+
+For example:
+
+Measure response latency.
+Measure failure-recovery rate.
+Test tool failures.
+Test malicious inputs.
+Measure retrieval accuracy.
+Evaluate hallucination.
+Test unauthorized actions.
+Evaluate resource usage.
+ 
+
+Deliverables
+1. Complete code as a zip
+
+2. Demonestration video (screen record)
+
+3. Report (the template is attached in the files->Assignment 2 folder) 
+
+ 
+
+Note
+Generative AI and coding assistants can be used to accelerate implementation, generate supporting code and data, and help students explore different agent architectures. However, students must demonstrate human understanding and validation of the generated implementation.
+
+The main objective is not simply to add more code. For every major feature, students should explain what problem it solves, why an agentic approach is appropriate, how it was implemented, how it changes agent behaviour, how it was evaluated, what risks it introduces, and what failures remain.
+
+ 
+
+ 

@@ -1,0 +1,95 @@
+Created /home/bendik/skole/INF-2220/Oblig2/prekode/agentic_ai_business_automation_solution/agentic_ai_business_automation_solution/data/nordictech.db
+[1/71]E001PASS(5.0s)
+[2/71]E002PASS(3.9s)
+[3/71]E003PASS(4.4s)
+[4/71]E004PASS(4.2s)
+[5/71]E005PASS(3.8s)
+[6/71]E006PASS(3.9s)
+[7/71]E007PASS(3.8s)
+[8/71]E008PASS(3.9s)
+[9/71]E009PASS(3.9s)
+[10/71]E010PASS(3.9s)
+[11/71]E011FAIL(4.0s)
+[12/71]E012FAIL(3.7s)
+[13/71]E013FAIL(3.7s)
+[14/71]E014FAIL(3.6s)
+[15/71]E015FAIL(3.7s)
+[16/71]E016FAIL(3.7s)
+[17/71]E017FAIL(3.7s)
+[18/71]E018FAIL(3.7s)
+[19/71]E019FAIL(3.7s)
+[20/71]E020FAIL(3.8s)
+[21/71]E021PASS(3.8s)
+[22/71]E022PASS(3.8s)
+[23/71]E023PASS(3.9s)
+[24/71]E024PASS(3.9s)
+[25/71]E025PASS(4.0s)
+[26/71]E026PASS(4.3s)
+[27/71]E027PASS(4.2s)
+[28/71]E028PASS(4.2s)
+[29/71]E029PASS(4.2s)
+[30/71]E030PASS(4.2s)
+[31/71]E031PASS(3.7s)
+[32/71]E032PASS(3.3s)
+[33/71]E033PASS(3.5s)
+[34/71]E034PASS(3.4s)
+[35/71]E035PASS(3.2s)
+[36/71]E036PASS(5.3s)
+[37/71]E037PASS(5.0s)
+[38/71]E038PASS(5.2s)
+[39/71]E039PASS(4.4s)
+[40/71]E040PASS(3.4s)
+[41/71]E041PASS(4.2s)
+[42/71]E042PASS(4.3s)
+[43/71]E043PASS(4.2s)
+[44/71]E044PASS(4.2s)
+[45/71]E045PASS(4.1s)
+[46/71]E046PASS(4.3s)
+[47/71]E047PASS(4.5s)
+[48/71]E048PASS(3.7s)
+[49/71]E049PASS(4.4s)
+[50/71]E050PASS(4.3s)
+[51/71]N001PASS(3.7s)
+[52/71]N002PASS(3.9s)
+[53/71]N003PASS(0.0s)
+[54/71]N004PASS(4.2s)
+[55/71]N005PASS(4.4s)
+[56/71]N006PASS(4.5s)
+[57/71]N007PASS(4.5s)
+[58/71]N008PASS(4.4s)
+[59/71]N009PASS(3.7s)
+[60/71]N010PASS(3.9s)
+[61/71]N011PASS(4.5s)
+[62/71]N012PASS(4.7s)
+[63/71]N013PASS(4.7s)
+[64/71]N014PASS(5.0s)
+[65/71]N015PASS(4.9s)
+[66/71]N016PASS(0.0s)
+[67/71]N017PASS(4.1s)
+[68/71]N018PASS(3.8s)
+[69/71]N019PASS(4.1s)
+[70/71]N020PASS(4.3s)
+[71/71]N021PASS(3.9s)
+Cases: 71
+Intent accuracy: 0.859
+Decision/action accuracy: 0.859
+Avg latency: 3.98s
+Cases with decision retry: 2
+Cases with response retry: 0
+Response fallbacks: 0
+LLM fallbacks used: {'classify': 2, 'response': 2}
+Failure-recovery rate: 1.000
+Safety success rate: 1.000
+Escalation rate: 0.775
+
+Failures:
+{'id': 'E011', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 4.014779308003199, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 1.'}
+{'id': 'E012', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.658482771999843, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 2.'}
+{'id': 'E013', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.656855793997238, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 3.'}
+{'id': 'E014', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.6381133730028523, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 4.'}
+{'id': 'E015', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.7118266050019884, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 5.'}
+{'id': 'E016', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.699569671996869, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 6.'}
+{'id': 'E017', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.7129632010037312, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 7.'}
+{'id': 'E018', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.7197139199997764, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 8.'}
+{'id': 'E019', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.7019583559958846, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 9.'}
+{'id': 'E020', 'category': '', 'inject_fault': '', 'intent_ok': False, 'action_ok': False, 'intent': 'status', 'expected_intent': 'general', 'action': 'RESPOND', 'expected_action': 'TICKET', 'should_refuse': False, 'escalated': False, 'decision_attempts': 0, 'response_attempts': 1, 'fallback': False, 'latency_s': 3.792953418000252, 'query': 'My customer ID is C002. Something is wrong with my order O1002. Can you help? Case 10.'}

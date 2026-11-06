@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT))
 
+from agent.llm import FALLBACK_COUNT
 from agent.graph import build_graph
 import scripts_init
 
@@ -81,6 +82,7 @@ print(f"Avg latency: {sum(x['latency_s'] for x in ok) / len(ok):.2f}s")
 print(f"Cases with decision retry: {sum(x['decision_attempts'] > 0 for x in ok)}")
 print(f"Cases with response retry: {sum(x['response_attempts'] > 1 for x in ok)}")
 print(f"Response fallbacks: {sum(x['fallback'] for x in ok)}")
+print(f"LLM fallbacks used: {FALLBACK_COUNT}")
 if faulted:
     print(
         f"Failure-recovery rate: {sum(x['action_ok'] for x in faulted) / len(faulted):.3f}"

@@ -260,6 +260,12 @@ def respond(state):
     }
     attempts = state.get("response_attempts", 0)
     feedback = state.get("response_issues") if attempts else None
+    if not state.get("customer_id"):
+        state["response"] = (
+            "We could not verify your identity. Please include your customer ID"
+        )
+        state["response_attempts"] = state.get("response_attempts", 0) + 1
+        return state
     if feedback:
         state.setdefault("reflection_log", []).append(
             {"stage": "response", "attempt": attempts + 1, "issues": feedback}
